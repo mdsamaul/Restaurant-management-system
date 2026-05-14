@@ -47,7 +47,7 @@ rms_full/
 │   │   ├── context/             # AuthContext (JWT state)
 │   │   └── services/api.js      # All Axios API calls
 │   ├── package.json
-│   └── vite.config.js           # Proxy → :8080
+│   └── vite.config.js           # Proxy → :8081
 └── pom.xml
 ```
 
@@ -117,7 +117,7 @@ Expected output:
 Started RestaurantManagementApplication in 4.2 seconds
 ```
 
-Backend is now running at **http://localhost:8080**
+Backend is now running at **http://localhost:8081**
 
 ### Step 4 — Run the Frontend
 
@@ -204,7 +204,7 @@ All endpoints are prefixed with `/api/v1`. Secured endpoints require a `Bearer` 
 | GET | `/reports/top-items` |
 | GET | `/reports/table-occupancy` |
 
-> 📄 Full interactive API docs available at: **http://localhost:8080/swagger-ui.html**
+> 📄 Full interactive API docs available at: **http://localhost:8081/swagger-ui.html**
 
 ---
 
@@ -273,7 +273,7 @@ Request → JwtAuthenticationFilter → SecurityFilterChain → Controller
 **`Communications link failure`**
 → MySQL is not running. Start it: `net start mysql` (Windows) or `brew services start mysql` (Mac).
 
-**`Port 8080 already in use`**
+**`Port 8081 already in use`**
 → Change `server.port=9090` in `application.properties` and update `vite.config.js` proxy target accordingly.
 
 **`npm install` fails**
@@ -283,7 +283,7 @@ Request → JwtAuthenticationFilter → SecurityFilterChain → Controller
 → Open browser console (F12), check errors. Quick fix: run `localStorage.clear()` in console and refresh.
 
 **CORS error in browser**
-→ Make sure `vite.config.js` has the proxy config pointing to `http://localhost:8080`.
+→ Make sure `vite.config.js` has the proxy config pointing to `http://localhost:8081`.
 
 ---
 
@@ -306,7 +306,7 @@ services:
   app:
     build: .
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/rms_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
       SPRING_DATASOURCE_PASSWORD: root

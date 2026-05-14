@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
     info=@Info(title="Restaurant Management System API", version="1.0.0",
         description="Complete REST API for RMS", contact=@Contact(name="RMS Team",email="admin@rms.com")),
-    servers=@Server(url="http://localhost:8080",description="Local Server"))
+    servers=@Server(url="http://localhost:8081",description="Local Server"))
 @SecurityScheme(name="bearerAuth",description="JWT Token",scheme="bearer",
     type=SecuritySchemeType.HTTP,bearerFormat="JWT",in=SecuritySchemeIn.HEADER)
 public class OpenApiConfig {}

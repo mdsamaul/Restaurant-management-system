@@ -1,0 +1,19 @@
+# Maven
+target/
+
+# Node
+frontend/node_modules/
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
