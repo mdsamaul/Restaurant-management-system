@@ -8,9 +8,15 @@ public class OrderResponse {
     private Long id; private Long customerId; private String customerName;
     private Long tableId; private String tableNumber; private String status;
     private BigDecimal totalAmount; private BigDecimal taxAmount;
-    private String notes; private List<OrderItemResponse> orderItems;
+    private String notes; private Boolean isParcel; private Integer estimatedMinutes;
+    private List<OrderItemResponse> orderItems;
     private LocalDateTime createdAt; private LocalDateTime updatedAt;
     public static OrderResponse from(Order o){
+        int estMins = o.getOrderItems().stream()
+            .mapToInt(oi -> {
+                int mins = oi.getMenuItem().getEstimatedMinutes() != null ? oi.getMenuItem().getEstimatedMinutes() : 15;
+                return mins;
+            }).max().orElse(15);
         return OrderResponse.builder().id(o.getId())
             .customerId(o.getCustomer()!=null?o.getCustomer().getId():null)
             .customerName(o.getCustomer()!=null?o.getCustomer().getFullName():"Walk-in")
@@ -18,6 +24,8 @@ public class OrderResponse {
             .tableNumber(o.getTable()!=null?o.getTable().getTableNumber():null)
             .status(o.getStatus().name()).totalAmount(o.getTotalAmount()).taxAmount(o.getTaxAmount())
             .notes(o.getNotes())
+            .isParcel(o.getIsParcel() != null && o.getIsParcel())
+            .estimatedMinutes(estMins)
             .orderItems(o.getOrderItems().stream().map(OrderItemResponse::from).collect(Collectors.toList()))
             .createdAt(o.getCreatedAt()).updatedAt(o.getUpdatedAt()).build(); }
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder

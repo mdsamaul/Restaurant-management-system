@@ -13,7 +13,7 @@ export default function MenuManagement() {
   const [search, setSearch] = useState('')
   const [filterCat, setFilterCat] = useState('')
   const [loading, setLoading] = useState(true)
-  const [itemForm, setItemForm] = useState({ categoryId:'', name:'', description:'', price:'', imageUrl:'', isAvailable:true })
+  const [itemForm, setItemForm] = useState({ categoryId:'', name:'', description:'', price:'', imageUrl:'', isAvailable:true, estimatedMinutes:15 })
   const [catForm, setCatForm] = useState({ name:'', description:'', sortOrder:0 })
 
   const load = () => {
@@ -31,10 +31,10 @@ export default function MenuManagement() {
 
   const openEditItem = (item) => {
     setEditItem(item)
-    setItemForm({ categoryId:item.categoryId, name:item.name, description:item.description||'', price:item.price, imageUrl:item.imageUrl||'', isAvailable:item.isAvailable })
+    setItemForm({ categoryId:item.categoryId, name:item.name, description:item.description||'', price:item.price, imageUrl:item.imageUrl||'', isAvailable:item.isAvailable, estimatedMinutes:item.estimatedMinutes||15 })
     setShowItemModal(true)
   }
-  const openNewItem = () => { setEditItem(null); setItemForm({ categoryId:'', name:'', description:'', price:'', imageUrl:'', isAvailable:true }); setShowItemModal(true) }
+  const openNewItem = () => { setEditItem(null); setItemForm({ categoryId:'', name:'', description:'', price:'', imageUrl:'', isAvailable:true, estimatedMinutes:15 }); setShowItemModal(true) }
   const openEditCat = (cat) => { setEditCat(cat); setCatForm({ name:cat.name, description:cat.description||'', sortOrder:cat.sortOrder||0 }); setShowCatModal(true) }
   const openNewCat = () => { setEditCat(null); setCatForm({ name:'', description:'', sortOrder:0 }); setShowCatModal(true) }
 
@@ -103,7 +103,7 @@ export default function MenuManagement() {
           <div className="card">
             <div className="table-wrap">
               <table>
-                <thead><tr><th>Item</th><th>Category</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Item</th><th>Category</th><th>Price</th><th>Prep Time</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
                   {filteredItems.length === 0
                     ? <tr><td colSpan={5}><div className="empty-state"><div className="icon">🍽️</div><p>No items found</p></div></td></tr>
@@ -115,6 +115,7 @@ export default function MenuManagement() {
                         </td>
                         <td><span className="badge badge-info">{item.categoryName}</span></td>
                         <td><span className="price">৳{parseFloat(item.price).toFixed(0)}</span></td>
+                        <td><span style={{fontSize:'12px',color:'var(--text-muted)'}}>⏱️ {item.estimatedMinutes||15} min</span></td>
                         <td>
                           <button onClick={()=>toggleAvail(item.id)}
                             className={`badge ${item.isAvailable?'badge-success':'badge-danger'}`}
@@ -198,6 +199,13 @@ export default function MenuManagement() {
                     <option value="false">❌ No</option>
                   </select>
                 </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">⏱️ Estimated Prep Time (minutes)</label>
+                <input className="form-input" type="number" min="1" max="120" value={itemForm.estimatedMinutes}
+                  onChange={e=>setItemForm({...itemForm,estimatedMinutes:parseInt(e.target.value)||15})}
+                  placeholder="15"/>
+                <div style={{fontSize:'11px',color:'var(--text-muted)',marginTop:'4px'}}>Customers will see this as estimated wait time</div>
               </div>
             </div>
             <div className="modal-footer">

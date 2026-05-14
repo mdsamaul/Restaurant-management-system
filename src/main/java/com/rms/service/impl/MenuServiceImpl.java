@@ -54,7 +54,8 @@ public class MenuServiceImpl implements MenuService {
             .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + req.getCategoryId()));
         MenuItem item = MenuItem.builder().category(cat).name(req.getName())
             .description(req.getDescription()).price(req.getPrice())
-            .imageUrl(req.getImageUrl()).isAvailable(req.getIsAvailable()).build();
+            .imageUrl(req.getImageUrl()).isAvailable(req.getIsAvailable())
+            .estimatedMinutes(req.getEstimatedMinutes() != null ? req.getEstimatedMinutes() : 15).build();
         return MenuItemResponse.from(itemRepo.save(item));
     }
 
@@ -67,6 +68,7 @@ public class MenuServiceImpl implements MenuService {
         item.setDescription(req.getDescription()); item.setPrice(req.getPrice());
         item.setImageUrl(req.getImageUrl());
         if (req.getIsAvailable() != null) item.setIsAvailable(req.getIsAvailable());
+        if (req.getEstimatedMinutes() != null) item.setEstimatedMinutes(req.getEstimatedMinutes());
         return MenuItemResponse.from(itemRepo.save(item));
     }
 

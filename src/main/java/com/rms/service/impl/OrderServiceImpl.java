@@ -27,7 +27,8 @@ public class OrderServiceImpl implements OrderService {
         User customer = userRepo.findByEmail(customerEmail)
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        Order order = Order.builder().customer(customer).notes(req.getNotes()).build();
+        Order order = Order.builder().customer(customer).notes(req.getNotes())
+            .isParcel(req.getIsParcel() != null && req.getIsParcel()).build();
 
         if (req.getTableId() != null) {
             RestaurantTable table = tableRepo.findById(req.getTableId())

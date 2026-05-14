@@ -1,9 +1,14 @@
 import React from 'react'
 import { Outlet, NavLink } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { useNotifications } from '../../context/NotificationContext'
 
 export default function CustomerLayout() {
   const { user, logout } = useAuth()
+  const { totalUnreadChat, totalUnreadOrders } = useNotifications() || {}
+
+  const totalBadge = (totalUnreadChat || 0)
+
   return (
     <div className="app-layout">
       <aside className="sidebar">
@@ -18,7 +23,14 @@ export default function CustomerLayout() {
           </NavLink>
           <div className="nav-section-title">My Account</div>
           <NavLink to="/my-orders" className={({isActive})=>`nav-item${isActive?' active':''}`}>
-            <span className="nav-icon">📋</span> My Orders
+            <span className="nav-icon">📋</span>
+            My Orders
+            {totalBadge > 0 && (
+              <span className="badge" style={{
+                marginLeft:'auto', background:'var(--danger)', color:'#fff',
+                borderRadius:'10px', padding:'1px 7px', fontSize:'11px', fontWeight:700
+              }}>{totalBadge}</span>
+            )}
           </NavLink>
           <NavLink to="/my-reservations" className={({isActive})=>`nav-item${isActive?' active':''}`}>
             <span className="nav-icon">📅</span> My Reservations

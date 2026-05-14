@@ -6,6 +6,7 @@ import java.util.List;
 public class CreateOrderRequest {
     private Long tableId;
     private String notes;
+    @Builder.Default private Boolean isParcel = false;
     @NotEmpty private List<OrderItemRequest> items;
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
     public static class OrderItemRequest {

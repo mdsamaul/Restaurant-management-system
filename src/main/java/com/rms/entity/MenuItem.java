@@ -13,6 +13,7 @@ public class MenuItem {
     @Column(nullable=false,precision=10,scale=2) private BigDecimal price;
     @Column(length=500) private String imageUrl;
     @Builder.Default private Boolean isAvailable = true;
+    @Builder.Default private Integer estimatedMinutes = 15;
     @Column(updatable=false) private LocalDateTime createdAt;
     @PrePersist protected void onCreate(){ createdAt=LocalDateTime.now(); }
 }

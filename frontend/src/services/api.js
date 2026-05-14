@@ -63,3 +63,8 @@ export const reportAPI = {
   getTopItems: () => api.get('/reports/top-items'),
   getOccupancy: () => api.get('/reports/table-occupancy'),
 }
+export const chatAPI = {
+  getMessages: (orderId) => api.get(`/chat/order/${orderId}`),
+  sendMessage: (orderId, message) => api.post(`/chat/order/${orderId}`, { message }),
+  getUnread: (orderId) => api.get(`/chat/unread/order/${orderId}`),
+}

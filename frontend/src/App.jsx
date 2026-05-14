@@ -1,6 +1,7 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { NotificationProvider } from './context/NotificationContext'
 import AuthPage from './pages/auth/AuthPage'
 import AdminLayout from './components/layout/AdminLayout'
 import Dashboard from './pages/admin/Dashboard'
@@ -61,5 +62,5 @@ function AppRoutes() {
 }
 
 export default function App() {
-  return <AuthProvider><AppRoutes /></AuthProvider>
+  return <AuthProvider><NotificationProvider><AppRoutes /></NotificationProvider></AuthProvider>
 }

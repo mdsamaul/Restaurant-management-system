@@ -16,6 +16,7 @@ public class Order {
     @Column(precision=10,scale=2) @Builder.Default private BigDecimal totalAmount = BigDecimal.ZERO;
     @Column(precision=10,scale=2) @Builder.Default private BigDecimal taxAmount = BigDecimal.ZERO;
     @Column(columnDefinition="TEXT") private String notes;
+    @Builder.Default private Boolean isParcel = false;
     @OneToMany(mappedBy="order",cascade=CascadeType.ALL,orphanRemoval=true)
     @Builder.Default private List<OrderItem> orderItems = new ArrayList<>();
     @OneToOne(mappedBy="order",cascade=CascadeType.ALL) private Payment payment;

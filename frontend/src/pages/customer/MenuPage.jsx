@@ -12,6 +12,7 @@ export default function MenuPage() {
   const [showCart, setShowCart] = useState(false)
   const [tableId, setTableId] = useState('')
   const [notes, setNotes] = useState('')
+  const [isParcel, setIsParcel] = useState(false)
   const [loading, setLoading] = useState(true)
   const [ordering, setOrdering] = useState(false)
 
@@ -49,12 +50,13 @@ export default function MenuPage() {
     setOrdering(true)
     try {
       await orderAPI.create({
-        tableId: tableId || null,
+        tableId: isParcel ? null : (tableId || null),
         notes,
+        isParcel,
         items: cart.map(c=>({ menuItemId:c.id, quantity:c.qty, specialRequest:c.specialRequest }))
       })
       toast.success('🎉 Order placed successfully!')
-      setCart([]); setShowCart(false); setNotes(''); setTableId('')
+      setCart([]); setShowCart(false); setNotes(''); setTableId(''); setIsParcel(false)
     } catch(e) { toast.error(e.response?.data?.message || 'Order failed')
     } finally { setOrdering(false) }
   }
@@ -109,7 +111,10 @@ export default function MenuPage() {
                 </div>
                 {item.description && <p style={{fontSize:'12px',color:'var(--text-muted)',marginBottom:'12px',lineHeight:'1.5'}}>{item.description.slice(0,70)}{item.description.length>70?'...':''}</p>}
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                  <span style={{fontSize:'18px',fontWeight:800,color:'var(--primary)'}}>৳{parseFloat(item.price).toFixed(0)}</span>
+                  <div>
+                    <span style={{fontSize:'18px',fontWeight:800,color:'var(--primary)'}}>৳{parseFloat(item.price).toFixed(0)}</span>
+                    <div style={{fontSize:'11px',color:'var(--text-muted)',marginTop:'2px'}}>⏱️ ~{item.estimatedMinutes||15} min</div>
+                  </div>
                   <button className="btn btn-primary btn-sm" onClick={()=>addToCart(item)}>+ Add</button>
                 </div>
               </div>
@@ -150,13 +155,33 @@ export default function MenuPage() {
               {cart.length>0 && (
                 <>
                   <div className="divider"/>
+                  {/* Dine-in / Parcel toggle */}
                   <div className="form-group">
-                    <label className="form-label">Select Table (optional)</label>
-                    <select className="form-select" value={tableId} onChange={e=>setTableId(e.target.value)}>
-                      <option value="">No table (takeaway)</option>
-                      {tables.map(t=><option key={t.id} value={t.id}>Table {t.tableNumber} ({t.capacity} seats)</option>)}
-                    </select>
+                    <label className="form-label">Order Type</label>
+                    <div style={{display:'flex',gap:'8px'}}>
+                      <button onClick={()=>setIsParcel(false)}
+                        style={{flex:1,padding:'10px',borderRadius:'8px',border:`2px solid ${!isParcel?'var(--primary)':'var(--border)'}`,
+                          background:!isParcel?'var(--primary-light)':'#fff',cursor:'pointer',
+                          fontWeight:600,fontSize:'13px',color:!isParcel?'var(--primary)':'var(--text-muted)'}}>
+                        🪑 Dine In
+                      </button>
+                      <button onClick={()=>{ setIsParcel(true); setTableId('') }}
+                        style={{flex:1,padding:'10px',borderRadius:'8px',border:`2px solid ${isParcel?'var(--primary)':'var(--border)'}`,
+                          background:isParcel?'var(--primary-light)':'#fff',cursor:'pointer',
+                          fontWeight:600,fontSize:'13px',color:isParcel?'var(--primary)':'var(--text-muted)'}}>
+                        🛍️ Parcel / Takeaway
+                      </button>
+                    </div>
                   </div>
+                  {!isParcel && (
+                    <div className="form-group">
+                      <label className="form-label">Select Table (optional)</label>
+                      <select className="form-select" value={tableId} onChange={e=>setTableId(e.target.value)}>
+                        <option value="">No table (walk-in)</option>
+                        {tables.map(t=><option key={t.id} value={t.id}>Table {t.tableNumber} ({t.capacity} seats)</option>)}
+                      </select>
+                    </div>
+                  )}
                   <div className="form-group">
                     <label className="form-label">Order Notes</label>
                     <textarea className="form-textarea" value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Any special instructions..."/>
